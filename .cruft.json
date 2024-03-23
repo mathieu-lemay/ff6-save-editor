@@ -1,0 +1,17 @@
+{
+  "template": "git@github.com:mathieu-lemay/python-project-template.git",
+  "commit": "664a34cf055db967244384cba5785126a21b9307",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_slug": "ff6-save-editor",
+      "project_description": "Project description",
+      "module_name": "ff6_save_editor",
+      "python_version": "^3.11",
+      "target_version": "py311",
+      "license": "MIT",
+      "_template": "git@github.com:mathieu-lemay/python-project-template.git"
+    }
+  },
+  "directory": null
+}
