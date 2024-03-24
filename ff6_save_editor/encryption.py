@@ -2,7 +2,7 @@ from typing import cast
 
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from py3rijndael import RijndaelCbc, ZeroPadding  # ty_pe: ignore[import-untyped]
+from py3rijndael import RijndaelCbc, ZeroPadding  # type: ignore[import-untyped]
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -40,5 +40,3 @@ class EncryptionManager:
         padding = b"\x00" * (len(data) - len(plaintext))
 
         return plaintext + padding
-
-
