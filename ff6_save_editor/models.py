@@ -12,19 +12,26 @@ class BaseModel(PydanticBaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
-T = TypeVar("T", bound=BaseModel)
+M = TypeVar("M", bound=BaseModel)
+T = TypeVar("T")
+K = TypeVar("K")
+V = TypeVar("V")
 
 
-class ListWrapper(BaseModel, Generic[T]):
-    target: list[T]
+class ModelListWrapper(BaseModel, Generic[M]):
+    target: list[M]
 
     @field_validator("target", mode="before")
     def deserialize_data(cls, v: list[str]) -> list[JsonDict]:
         return [cast(JsonDict, json.loads(i)) for i in v]
 
     @field_serializer("target")
-    def serialize_data(self, items: list[T]) -> list[str]:
+    def serialize_data(self, items: list[M]) -> list[str]:
         return [i.model_dump_json() for i in items]
+
+
+class PrimitiveListWrapper(BaseModel, Generic[T]):
+    target: list[T]
 
 
 class ItemModel(BaseModel):
@@ -32,42 +39,107 @@ class ItemModel(BaseModel):
     count: int
 
 
+class CountList(BaseModel, Generic[K, V]):
+    keys: list[K]
+    values: list[V]
+
+
+class CharacterParameterModel(BaseModel):
+    current_hp: int = Field(alias="currentHP")
+    current_mp: int = Field(alias="currentMP")
+    current_mp_count_list: CountList[int, int] = Field(alias="currentMpCountList")
+    addtional_max_mp_count_list: CountList[int, int] = Field(
+        alias="addtionalMaxMpCountList"
+    )
+    addtional_level: int = Field(alias="addtionalLevel")
+    addtional_max_hp: int = Field(alias="addtionalMaxHp")
+    addtional_max_mp: int = Field(alias="addtionalMaxMp")
+    addtional_power: int = Field(alias="addtionalPower")
+    addtional_vitality: int = Field(alias="addtionalVitality")
+    addtional_agility: int = Field(alias="addtionalAgility")
+    additonal_weight: int = Field(alias="addionalWeight")  # sic
+    addtional_intelligence: int = Field(alias="addtionalIntelligence")
+    addtional_spirit: int = Field(alias="addtionalSpirit")
+    addtional_attack: int = Field(alias="addtionalAttack")
+    addtional_defense: int = Field(alias="addtionalDefense")
+    addtional_ability_defense: int = Field(alias="addtionalAbilityDefense")
+    addtional_ability_evasion_rate: int = Field(alias="addtionalAbilityEvasionRate")
+    addtional_magic: int = Field(alias="addtionalMagic")
+    addtional_luck: int = Field(alias="addtionalLuck")
+    addtional_accuracy_rate: int = Field(alias="addtionalAccuracyRate")
+    addtional_evasion_rate: int = Field(alias="addtionalEvasionRate")
+    addtional_ability_disturbed_rate: int = Field(alias="addtionalAbilityDisturbedRate")
+    addtional_critical_rate: int = Field(alias="addtionalCriticalRate")
+    addtional_damage_dirmeter: int = Field(alias="addtionalDamageDirmeter")
+    addtional_ability_defense_rate: int = Field(alias="addtionalAbilityDefenseRate")
+    addtional_accuracy_count: int = Field(alias="addtionalAccuracyCount")
+    addtional_evasion_count: int = Field(alias="addtionalEvasionCount")
+    addtional_defense_count: int = Field(alias="addtionalDefenseCount")
+    addtional_magic_defense_count: int = Field(alias="addtionalMagicDefenseCount")
+    current_condition_list: PrimitiveListWrapper[int] = Field(
+        alias="currentConditionList"
+    )
+
+    @field_validator(
+        "current_mp_count_list",
+        "addtional_max_mp_count_list",
+        "current_condition_list",
+        mode="before",
+    )
+    def deserialize_json(cls, v: str) -> JsonDict:
+        return cast(JsonDict, json.loads(v))
+
+    @field_serializer(
+        "current_mp_count_list", "addtional_max_mp_count_list", "current_condition_list"
+    )
+    def serialize_json(self, obj: BaseModel) -> str:
+        return obj.model_dump_json()
+
+
 class CharacterModel(BaseModel):
     id: int = Field(alias="id")
-    characterStatusId: int = Field(alias="characterStatusId")
-    isEnableCorps: bool = Field(alias="isEnableCorps")
-    jobId: int = Field(alias="jobId")
+    character_status_id: int = Field(alias="characterStatusId")
+    is_enable_corps: bool = Field(alias="isEnableCorps")
+    job_id: int = Field(alias="jobId")
     name: str = Field(alias="name")
-    currentExp: int = Field(alias="currentExp")
-    parameter: str = Field(alias="parameter")
-    commandList: str = Field(alias="commandList")
-    abilityList: str = Field(alias="abilityList")
-    abilitySlotDataList: str = Field(alias="abilitySlotDataList")
-    jobList: str = Field(alias="jobList")
-    equipmentList: str = Field(alias="equipmentList")
-    additionOrderOwnedAbilityIds: str = Field(alias="additionOrderOwnedAbilityIds")
-    sortOrderOwnedAbilityIds: str = Field(alias="sortOrderOwnedAbilityIds")
-    abilityDictionary: str = Field(alias="abilityDictionary")
-    skillLevelTargets: str = Field(alias="skillLevelTargets")
-    learningAbilitys: str = Field(alias="learningAbilitys")
-    equipmentAbilitys: str = Field(alias="equipmentAbilitys")
-    numberOfButtles: int = Field(alias="numberOfButtles")
-    ownedMonsterId: int = Field(alias="ownedMonsterId")
-    magicStoneId: int = Field(alias="magicStoneId")
-    magicLearningValue: int = Field(alias="magicLearningValue")
-    isDefaultName: bool = Field(alias="isDefaultName")
+    current_exp: int = Field(alias="currentExp")
+    parameter: CharacterParameterModel = Field(alias="parameter")
+    command_list: str = Field(alias="commandList")
+    ability_list: str = Field(alias="abilityList")
+    ability_slot_data_list: str = Field(alias="abilitySlotDataList")
+    job_list: str = Field(alias="jobList")
+    equipment_list: str = Field(alias="equipmentList")
+    addition_order_owned_ability_ids: str = Field(alias="additionOrderOwnedAbilityIds")
+    sort_order_owned_ability_ids: str = Field(alias="sortOrderOwnedAbilityIds")
+    ability_dictionary: str = Field(alias="abilityDictionary")
+    skill_level_targets: str = Field(alias="skillLevelTargets")
+    learning_abilities: str = Field(alias="learningAbilitys")
+    equipment_abilities_: str = Field(alias="equipmentAbilitys")
+    number_of_buttles: int = Field(alias="numberOfButtles")
+    owned_monster_id: int = Field(alias="ownedMonsterId")
+    magic_stone_id: int = Field(alias="magicStoneId")
+    magic_learning_value: int = Field(alias="magicLearningValue")
+    is_default_name: bool = Field(alias="isDefaultName")
+
+    @field_validator("parameter", mode="before")
+    def deserialize_json(cls, v: str) -> JsonDict:
+        return cast(JsonDict, json.loads(v))
+
+    @field_serializer("parameter")
+    def serialize_json(self, obj: BaseModel) -> str:
+        return obj.model_dump_json()
 
 
 class UserData(BaseModel):
     corps_list: str = Field(alias="corpsList")
     corps_slots: str = Field(alias="corpsSlots")
-    owned_character_list: ListWrapper[CharacterModel] = Field(
+    owned_character_list: ModelListWrapper[CharacterModel] = Field(
         alias="ownedCharacterList"
     )
     released_jobs: str = Field(alias="releasedJobs")
     owned_gil: int = Field(alias="owendGil")  # sic
     play_time: float = Field(alias="playTime")
-    normal_owned_items: ListWrapper[ItemModel] = Field(alias="normalOwnedItemList")
+    normal_owned_items: ModelListWrapper[ItemModel] = Field(alias="normalOwnedItemList")
     important_owned_items: str = Field(alias="importantOwendItemList")
     normal_owned_item_sort_id_list: str = Field(alias="normalOwnedItemSortIdList")
     current_area: str = Field(alias="currentArea")
@@ -92,11 +164,11 @@ class UserData(BaseModel):
     is_opened_game_booster_window: bool = Field(alias="isOpenedGameBoosterWindow")
 
     @field_validator("normal_owned_items", "owned_character_list", mode="before")
-    def deserialize_data(cls, v: str) -> JsonDict:
+    def deserialize_json(cls, v: str) -> JsonDict:
         return cast(JsonDict, json.loads(v))
 
     @field_serializer("normal_owned_items", "owned_character_list")
-    def serialize_data(self, obj: BaseModel) -> str:
+    def serialize_json(self, obj: BaseModel) -> str:
         return obj.model_dump_json()
 
 
