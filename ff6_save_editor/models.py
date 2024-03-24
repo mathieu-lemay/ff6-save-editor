@@ -3,13 +3,13 @@ from datetime import datetime
 from typing import Any, Generic, TypeVar, cast
 
 from pydantic import BaseModel as PydanticBaseModel
-from pydantic import Field, field_serializer, field_validator
+from pydantic import ConfigDict, Field, field_serializer, field_validator
 
 JsonDict = dict[str, Any]
 
 
 class BaseModel(PydanticBaseModel):
-    pass
+    model_config = ConfigDict(extra="forbid")
 
 
 T = TypeVar("T", bound=BaseModel)
