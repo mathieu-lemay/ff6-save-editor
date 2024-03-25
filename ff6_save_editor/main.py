@@ -52,28 +52,6 @@ def main() -> None:
     for c in save_data.user_data.owned_character_list.target:
         if c.name == "Shadow":
             rprint(c)
-            #  print(f"{c.character_status_id=}")
-            #  print(f"{c.is_enable_corps=}")
-            #  print(f"{c.job_id=}")
-            #  print(f"{c.name=}")
-            #  print(f"{c.current_exp=}")
-            # print(f"{c.parameter=}")
-            #  print(f"{c.command_list=}")
-            #  print(f"{c.ability_list=}")
-            #  print(f"{c.ability_slot_data_list=}")
-            #  print(f"{c.job_list=}")
-            #  print(f"{c.equipment_list=}")
-            #  print(f"{c.addition_order_owned_ability_ids=}")
-            #  print(f"{c.sort_order_owned_ability_ids=}")
-            #  print(f"{c.ability_dictionary=}")
-            #  print(f"{c.skill_level_targets=}")
-            #  print(f"{c.learning_abilities=}")
-            #  print(f"{c.equipment_abilities_=}")
-            #  print(f"{c.number_of_buttles=}")
-            #  print(f"{c.owned_monster_id=}")
-            #  print(f"{c.magic_stone_id=}")
-            #  print(f"{c.magic_learning_value=}")
-            #  print(f"{c.is_default_name=}")
 
     save_data.user_data.owned_character_list.target = []
     rprint(save_data)

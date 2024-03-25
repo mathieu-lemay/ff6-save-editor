@@ -15,7 +15,6 @@ class BaseModel(PydanticBaseModel):
 M = TypeVar("M", bound=BaseModel)
 T = TypeVar("T")
 K = TypeVar("K")
-V = TypeVar("V")
 
 
 class ModelListWrapper(BaseModel, Generic[M]):
@@ -34,21 +33,36 @@ class PrimitiveListWrapper(BaseModel, Generic[T]):
     target: list[T]
 
 
+class ModelKeyValueList(BaseModel, Generic[K, M]):
+    keys: list[K]
+    values: list[M]
+
+    @field_validator("values", mode="before")
+    def deserialize_data(cls, v: list[str]) -> list[JsonDict]:
+        return [cast(JsonDict, json.loads(i)) for i in v]
+
+    @field_serializer("values")
+    def serialize_data(self, items: list[M]) -> list[str]:
+        return [i.model_dump_json() for i in items]
+
+
+class PrimitiveKeyValueList(BaseModel, Generic[K, T]):
+    keys: list[K]
+    values: list[T]
+
+
 class ItemModel(BaseModel):
     content_id: int = Field(alias="contentId")
     count: int
 
 
-class KeyValueList(BaseModel, Generic[K, V]):
-    keys: list[K]
-    values: list[V]
-
-
 class CharacterParameterModel(BaseModel):
     current_hp: int = Field(alias="currentHP")
     current_mp: int = Field(alias="currentMP")
-    current_mp_count_list: KeyValueList[int, int] = Field(alias="currentMpCountList")
-    additional_max_mp_count_list: KeyValueList[int, int] = Field(
+    current_mp_count_list: PrimitiveKeyValueList[int, int] = Field(
+        alias="currentMpCountList"
+    )
+    additional_max_mp_count_list: PrimitiveKeyValueList[int, int] = Field(
         alias="addtionalMaxMpCountList"
     )
     additional_level: int = Field(alias="addtionalLevel")
@@ -109,7 +123,7 @@ class AbilityModel(BaseModel):
 
 class AbilitySlotModel(BaseModel):
     level: int
-    slot_info: KeyValueList[int, str] = Field(alias="slotInfo")
+    slot_info: PrimitiveKeyValueList[int, str] = Field(alias="slotInfo")
 
     @field_validator("slot_info", mode="before")
     def deserialize_json(cls, v: str) -> JsonDict:
@@ -140,15 +154,17 @@ class CharacterModel(BaseModel):
         alias="abilitySlotDataList"
     )
     job_list: ModelListWrapper[JobModel] = Field(alias="jobList")
-    equipment_list: str = Field(alias="equipmentList")
+    equipment_list: ModelKeyValueList[int, ItemModel] = Field(alias="equipmentList")
     addition_order_owned_ability_ids: PrimitiveListWrapper[int] = Field(
         alias="additionOrderOwnedAbilityIds"
     )
     sort_order_owned_ability_ids: str = Field(alias="sortOrderOwnedAbilityIds")
-    ability_dictionary: str = Field(alias="abilityDictionary")
+    ability_dictionary: ModelKeyValueList[int, ModelListWrapper[AbilityModel]] = Field(
+        alias="abilityDictionary"
+    )
     skill_level_targets: str = Field(alias="skillLevelTargets")
     learning_abilities: str = Field(alias="learningAbilitys")
-    equipment_abilities_: str = Field(alias="equipmentAbilitys")
+    equipment_abilities: PrimitiveListWrapper[int] = Field(alias="equipmentAbilitys")
     number_of_battles: int = Field(alias="numberOfButtles")
     owned_monster_id: int = Field(alias="ownedMonsterId")
     magic_stone_id: int = Field(alias="magicStoneId")
@@ -162,6 +178,9 @@ class CharacterModel(BaseModel):
         "ability_slot_data_list",
         "job_list",
         "addition_order_owned_ability_ids",
+        "equipment_list",
+        "ability_dictionary",
+        "equipment_abilities",
         mode="before",
     )
     def deserialize_json(cls, v: str) -> JsonDict:
@@ -170,10 +189,13 @@ class CharacterModel(BaseModel):
     @field_serializer(
         "parameter",
         "command_list",
+        "ability_dictionary",
         "ability_list",
         "ability_slot_data_list",
         "job_list",
         "addition_order_owned_ability_ids",
+        "equipment_list",
+        "equipment_abilities",
     )
     def serialize_json(self, obj: BaseModel) -> str:
         return obj.model_dump_json()
