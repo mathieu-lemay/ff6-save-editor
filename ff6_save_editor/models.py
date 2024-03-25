@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 from enum import IntEnum
-from typing import Any, Generic, TypeVar, cast
+from typing import Any, Generic, Literal, TypeVar, cast
 
 from pydantic import BaseModel as PydanticBaseModel
 from pydantic import ConfigDict, Field, field_serializer, field_validator
@@ -736,6 +736,36 @@ class AbilityType(IntEnum):
     Unknown = 26
 
 
+class EsperId(IntEnum):
+    Ramuh = 62
+    Kirin = 63
+    Siren = 64
+    CaitSith = 65
+    Ifrit = 66
+    Shiva = 67
+    Unicorn = 68
+    Maduin = 69
+    Catoblepas = 70
+    Phantom = 71
+    Carbuncle = 72
+    Bismarck = 73
+    Golem = 74
+    ZonaSeeker = 75
+    Seraph = 76
+    Quetzalli = 77
+    Fenrir = 78
+    Valigarmanda = 79
+    Midgarsormr = 80
+    Lakshmi = 81
+    Alexander = 82
+    Phoenix = 83
+    Odin = 84
+    Bahamut = 85
+    Ragnarok = 86
+    Crusader = 87
+    Raiden = 88
+
+
 class AbilityModel(BaseModel):
     ability_id: AbilityId = Field(alias="abilityId")
     content_id: int = Field(alias="contentId")
@@ -816,16 +846,20 @@ class CharacterModel(BaseModel):
     addition_order_owned_ability_ids: PrimitiveListWrapper[int] = Field(
         alias="additionOrderOwnedAbilityIds"
     )
-    sort_order_owned_ability_ids: str = Field(alias="sortOrderOwnedAbilityIds")
+    sort_order_owned_ability_ids: PrimitiveListWrapper[int] = Field(
+        alias="sortOrderOwnedAbilityIds"
+    )
     ability_dictionary: ModelKeyValueList[
         AbilityType, ModelListWrapper[AbilityModel]
     ] = Field(alias="abilityDictionary")
-    skill_level_targets: str = Field(alias="skillLevelTargets")
-    learning_abilities: str = Field(alias="learningAbilitys")
+    skill_level_targets: PrimitiveKeyValueList[int, str] = Field(
+        alias="skillLevelTargets"
+    )
+    learning_abilities: PrimitiveListWrapper[int] = Field(alias="learningAbilitys")
     equipment_abilities: PrimitiveListWrapper[int] = Field(alias="equipmentAbilitys")
     number_of_battles: int = Field(alias="numberOfButtles")
     owned_monster_id: int = Field(alias="ownedMonsterId")
-    magic_stone_id: int = Field(alias="magicStoneId")
+    esper_id: EsperId | Literal[0] = Field(alias="magicStoneId")
     magic_learning_value: int = Field(alias="magicLearningValue")
     is_default_name: bool = Field(alias="isDefaultName")
 
@@ -839,6 +873,9 @@ class CharacterModel(BaseModel):
         "equipment_list",
         "ability_dictionary",
         "equipment_abilities",
+        "skill_level_targets",
+        "learning_abilities",
+        "sort_order_owned_ability_ids",
         mode="before",
     )
     def deserialize_json(cls, v: str) -> JsonDict:
@@ -854,6 +891,9 @@ class CharacterModel(BaseModel):
         "addition_order_owned_ability_ids",
         "equipment_list",
         "equipment_abilities",
+        "skill_level_targets",
+        "learning_abilities",
+        "sort_order_owned_ability_ids",
     )
     def serialize_json(self, obj: BaseModel) -> str:
         return obj.model_dump_json(by_alias=True)
@@ -890,9 +930,7 @@ class UserData(BaseModel):
     battle_count: int = Field(alias="battleCount")
     corps_slot_index: int = Field(alias="corpsSlotIndex")
     open_chest_count: int = Field(alias="openChestCount")
-    owned_magic_stones: PrimitiveListWrapper[int] = Field(
-        alias="ownedMagicStoneList"
-    )  # Espers?
+    owned_espers: PrimitiveListWrapper[EsperId] = Field(alias="ownedMagicStoneList")
     steps: int = Field(alias="steps")
     save_complete_count: int = Field(alias="saveCompleteCount")
     monsters_killed_count: int = Field(alias="monstersKilledCount")
@@ -903,7 +941,7 @@ class UserData(BaseModel):
     @field_validator(
         "normal_owned_items",
         "owned_character_list",
-        "owned_magic_stones",
+        "owned_espers",
         "normal_owned_item_sort_id_list",
         "important_owned_items",
         "owned_crystal_flags",
@@ -918,7 +956,7 @@ class UserData(BaseModel):
     @field_serializer(
         "normal_owned_items",
         "owned_character_list",
-        "owned_magic_stones",
+        "owned_espers",
         "released_jobs",
         "important_owned_items",
         "normal_owned_item_sort_id_list",
