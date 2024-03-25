@@ -33,7 +33,7 @@ def save(
     dst.write_bytes(encrypted)
 
 
-def main() -> None:
+def main() -> None:  # pragma: no cover
     # fp = Path()
     # if len(sys.argv) > 1:
     #     fp /= sys.argv[1]
@@ -62,5 +62,5 @@ def main() -> None:
         rprint(f"{c.sort_order_owned_ability_ids=}")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

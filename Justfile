@@ -5,8 +5,8 @@ test:
     poetry run pytest \
       --verbosity=1 \
       --cov --cov-append \
-      --cov-report=term-missing:skip-covered \
-      --cov-fail-under=98
+      --cov-report=term-missing \
+      --cov-fail-under=100
 
 install:
     poetry install --sync
