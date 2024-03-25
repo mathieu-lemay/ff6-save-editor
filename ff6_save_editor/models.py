@@ -27,7 +27,7 @@ class ModelListWrapper(BaseModel, Generic[M]):
 
     @field_serializer("target")
     def serialize_data(self, items: list[M]) -> list[str]:
-        return [i.model_dump_json() for i in items]
+        return [i.model_dump_json(by_alias=True) for i in items]
 
 
 class PrimitiveListWrapper(BaseModel, Generic[T]):
@@ -44,7 +44,7 @@ class ModelKeyValueList(BaseModel, Generic[K, M]):
 
     @field_serializer("values")
     def serialize_data(self, items: list[M]) -> list[str]:
-        return [i.model_dump_json() for i in items]
+        return [i.model_dump_json(by_alias=True) for i in items]
 
 
 class PrimitiveKeyValueList(BaseModel, Generic[K, T]):
@@ -319,7 +319,7 @@ class CharacterParameterModel(BaseModel):
         "current_condition_list",
     )
     def serialize_json(self, obj: BaseModel) -> str:
-        return obj.model_dump_json()
+        return obj.model_dump_json(by_alias=True)
 
 
 class AbilityId(IntEnum):
@@ -753,7 +753,7 @@ class AbilitySlotModel(BaseModel):
 
     @field_serializer("slot_info")
     def serialize_json(self, obj: BaseModel) -> str:
-        return obj.model_dump_json()
+        return obj.model_dump_json(by_alias=True)
 
 
 class JobModel(BaseModel):
@@ -856,7 +856,7 @@ class CharacterModel(BaseModel):
         "equipment_abilities",
     )
     def serialize_json(self, obj: BaseModel) -> str:
-        return obj.model_dump_json()
+        return obj.model_dump_json(by_alias=True)
 
 
 class UserData(BaseModel):
@@ -927,7 +927,7 @@ class UserData(BaseModel):
         "learned_abilities",
     )
     def serialize_json(self, obj: BaseModel) -> str:
-        return obj.model_dump_json()
+        return obj.model_dump_json(by_alias=True)
 
 
 class GlobalValuesKey(IntEnum):
@@ -970,7 +970,7 @@ class SaveModel(BaseModel):
         "data_storage",
     )
     def serialize_data(self, user_data: UserData) -> str:
-        return user_data.model_dump_json()
+        return user_data.model_dump_json(by_alias=True)
 
     @field_validator("timestamp", mode="before")
     def deserialize_timestamp(cls, v: str) -> datetime:
