@@ -7,7 +7,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class EncryptionSettings(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="FF6_EDITOR_", env_file=".env")
+    model_config = SettingsConfigDict(
+        env_prefix="FF6_EDITOR_ENCRYPTION_", env_file=".env"
+    )
 
     password: bytes
     salt: bytes
@@ -15,9 +17,7 @@ class EncryptionSettings(BaseSettings):
 
 
 class EncryptionManager:
-    def __init__(self, encryption_settings: EncryptionSettings | None = None) -> None:
-        encryption_settings = encryption_settings or EncryptionSettings()
-
+    def __init__(self, encryption_settings: EncryptionSettings) -> None:
         algo = hashes.SHA1()  # noqa: S303: Insecure algorithm. Not my choice.
         kdf = PBKDF2HMAC(algo, length=64, salt=encryption_settings.salt, iterations=10)
         key_iv_bytes = kdf.derive(encryption_settings.password)

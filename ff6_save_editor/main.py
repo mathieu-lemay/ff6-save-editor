@@ -5,28 +5,30 @@ from pathlib import Path
 
 from rich import print as rprint
 
-from ff6_save_editor.encryption import EncryptionManager
+from ff6_save_editor.encryption import EncryptionManager, EncryptionSettings
 from ff6_save_editor.models import EsperId, SaveModel
 
 
-def load(src: Path) -> SaveModel:
+def load(src: Path, encryption_settings: EncryptionSettings | None = None) -> SaveModel:
     buffer = src.read_bytes()
 
-    enc = EncryptionManager()
+    enc = EncryptionManager(encryption_settings or EncryptionSettings())
     decrypted = enc.decrypt(buffer)
 
     raw = zlib.decompress(decrypted, wbits=-zlib.MAX_WBITS)
 
-    # src.with_suffix(".json").write_bytes(raw)
-
     return SaveModel.model_validate_json(raw)
 
 
-def save(save_model: SaveModel, dst: Path) -> None:
+def save(
+    save_model: SaveModel,
+    dst: Path,
+    encryption_settings: EncryptionSettings | None = None,
+) -> None:
     raw = save_model.model_dump_json(by_alias=True).encode()
     buffer = zlib.compress(raw, wbits=-zlib.MAX_WBITS)
 
-    enc = EncryptionManager()
+    enc = EncryptionManager(encryption_settings or EncryptionSettings())
     encrypted = enc.encrypt(buffer)
     dst.write_bytes(encrypted)
 
