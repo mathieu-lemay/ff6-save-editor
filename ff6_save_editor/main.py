@@ -4,7 +4,6 @@ import zlib
 from pathlib import Path
 
 from rich import print as rprint
-from rich import reconfigure
 
 from ff6_save_editor.encryption import EncryptionManager
 from ff6_save_editor.models import SaveModel
@@ -18,19 +17,18 @@ def load(src: Path) -> SaveModel:
 
     raw = zlib.decompress(decrypted, wbits=-zlib.MAX_WBITS)
 
-    src.with_suffix(".json").write_bytes(raw)
+    # src.with_suffix(".json").write_bytes(raw)
 
     return SaveModel.model_validate_json(raw)
 
 
 def save(save_model: SaveModel, dst: Path) -> None:
-    raw = save_model.model_dump_json()
-    buffer = zlib.compress(raw.encode(), wbits=-zlib.MAX_WBITS)
+    raw = save_model.model_dump_json(by_alias=True).encode()
+    buffer = zlib.compress(raw, wbits=-zlib.MAX_WBITS)
 
     enc = EncryptionManager()
-    buffer = enc.encrypt(buffer)
-
-    dst.write_bytes(buffer)
+    encrypted = enc.encrypt(buffer)
+    dst.write_bytes(encrypted)
 
 
 def main() -> None:
@@ -45,16 +43,16 @@ def main() -> None:
     with (Path("sample") / "sample.json").open() as f:
         save_data = SaveModel.model_validate_json(f.read())
 
-    reconfigure(color_system="truecolor")
-    rprint(f"{save_data.id=}")
-    rprint(f"{save_data.timestamp=}")
+    # save_data.data_storage.global_values[GlobalValuesKey.CursedShieldBattles] = 254
+    # dst = Path("ookrbATYovG3tEOXIH4HqWnsv8TrUlRWzM8AlCmW2mk=")
+    # save(save_data, dst)
+
+    # rprint(save_data)
 
     for c in save_data.user_data.owned_character_list.target:
-        if c.name == "Shadow":
-            rprint(c)
-
-    save_data.user_data.owned_character_list.target = []
-    rprint(save_data)
+        if c.name in ("Celes", "Sabin", "Edgar", "Shadow"):
+            print(f"< ==== {c.name} ({c.id!r}) ==== >")
+            rprint(c.equipment_list)
 
     #  dst = fp.with_suffix(fp.suffix + ".new")
     #  print(f"Saving to {dst}")
