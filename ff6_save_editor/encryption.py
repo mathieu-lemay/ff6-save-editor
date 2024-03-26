@@ -8,7 +8,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class EncryptionSettings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_prefix="FF6_EDITOR_ENCRYPTION_", env_file=".env"
+        env_prefix="FF6_EDITOR_ENCRYPTION_", env_file=".env", extra="ignore"
     )
 
     password: bytes
