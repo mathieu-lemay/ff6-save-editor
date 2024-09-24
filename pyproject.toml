@@ -9,7 +9,7 @@ include = ["ff6_save_editor/py.typed"]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-cryptography = "^42.0.5"
+cryptography = "^43.0.1"
 py3rijndael = "^0.3.3"
 pydantic = "^2.6.4"
 
