@@ -962,7 +962,7 @@ class CharacterId(IntEnum):
     MogNpc = 21  # The non-playable version of Mog
     Celes = 22
     Cyan = 23
-    Mystery = 24  # Real name is '??????'
+    TerraMagitek = 24  # Terra in Magitek armor at start of the game
     Gau = 25
     Setzer = 26
     Maduin = 27
