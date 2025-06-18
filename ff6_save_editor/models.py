@@ -23,7 +23,7 @@ class ModelListWrapper(BaseModel, Generic[M]):
 
     @field_validator("target", mode="before")
     def deserialize_data(cls, v: list[str]) -> list[JsonDict]:
-        return [cast(JsonDict, json.loads(i)) for i in v]
+        return [cast("JsonDict", json.loads(i)) for i in v]
 
     @field_serializer("target")
     def serialize_data(self, items: list[M]) -> list[str]:
@@ -40,7 +40,7 @@ class ModelKeyValueList(BaseModel, Generic[K, M]):
 
     @field_validator("values", mode="before")
     def deserialize_data(cls, v: list[str]) -> list[JsonDict]:
-        return [cast(JsonDict, json.loads(i)) for i in v]
+        return [cast("JsonDict", json.loads(i)) for i in v]
 
     @field_serializer("values")
     def serialize_data(self, items: list[M]) -> list[str]:
@@ -457,7 +457,7 @@ class CharacterParameterModel(BaseModel):
         mode="before",
     )
     def deserialize_json(cls, v: str) -> JsonDict:
-        return cast(JsonDict, json.loads(v))
+        return cast("JsonDict", json.loads(v))
 
     @field_serializer(
         "current_mp_count_list",
@@ -925,7 +925,7 @@ class AbilitySlotModel(BaseModel):
 
     @field_validator("slot_info", mode="before")
     def deserialize_json(cls, v: str) -> JsonDict:
-        return cast(JsonDict, json.loads(v))
+        return cast("JsonDict", json.loads(v))
 
     @field_serializer("slot_info")
     def serialize_json(self, obj: BaseModel) -> str:
@@ -1025,7 +1025,7 @@ class CharacterModel(BaseModel):
         mode="before",
     )
     def deserialize_json(cls, v: str) -> JsonDict:
-        return cast(JsonDict, json.loads(v))
+        return cast("JsonDict", json.loads(v))
 
     @field_serializer(
         "parameter",
@@ -1097,7 +1097,7 @@ class UserData(BaseModel):
         mode="before",
     )
     def deserialize_json(cls, v: str) -> JsonDict:
-        return cast(JsonDict, json.loads(v))
+        return cast("JsonDict", json.loads(v))
 
     @field_serializer(
         "normal_owned_items",
@@ -1147,7 +1147,7 @@ class SaveModel(BaseModel):
         mode="before",
     )
     def deserialize_data(cls, v: str) -> JsonDict:
-        return cast(JsonDict, json.loads(v))
+        return cast("JsonDict", json.loads(v))
 
     @field_serializer(
         "user_data",

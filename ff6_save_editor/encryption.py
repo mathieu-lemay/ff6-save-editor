@@ -18,7 +18,7 @@ class EncryptionSettings(BaseSettings):
 
 class EncryptionManager:
     def __init__(self, encryption_settings: EncryptionSettings) -> None:
-        algo = hashes.SHA1()  # noqa: S303: Insecure algorithm. Not my choice.
+        algo = hashes.SHA1()  # noqa: S303  # Insecure algorithm. Not my choice.
         kdf = PBKDF2HMAC(algo, length=64, salt=encryption_settings.salt, iterations=10)
         key_iv_bytes = kdf.derive(encryption_settings.password)
 
@@ -33,10 +33,10 @@ class EncryptionManager:
         )
 
     def encrypt(self, data: bytes) -> bytes:
-        return cast(bytes, self.cipher.encrypt(data))
+        return cast("bytes", self.cipher.encrypt(data))
 
     def decrypt(self, data: bytes) -> bytes:
-        plaintext = cast(bytes, self.cipher.decrypt(data))
+        plaintext = cast("bytes", self.cipher.decrypt(data))
         padding = b"\x00" * (len(data) - len(plaintext))
 
         return plaintext + padding

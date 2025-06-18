@@ -18,7 +18,7 @@ def sample_save_data(pytestconfig: Config) -> SaveModel:
         return SaveModel.model_validate_json(f.read())
 
 
-@pytest.fixture()
+@pytest.fixture
 def encryption_settings(faker: Faker) -> EncryptionSettings:
     password = faker.pystr(min_chars=32, max_chars=32)
     salt = faker.pystr(min_chars=32, max_chars=32)
@@ -26,7 +26,7 @@ def encryption_settings(faker: Faker) -> EncryptionSettings:
     return EncryptionSettings(password=password, salt=salt)
 
 
-@pytest.fixture()
+@pytest.fixture
 def encryption_manager(encryption_settings: EncryptionSettings) -> EncryptionManager:
     return EncryptionManager(encryption_settings)
 
