@@ -9,7 +9,7 @@ test:
       --cov-fail-under=100
 
 install:
-    poetry install --sync
+    poetry sync
 
 update: _poetry_lock install
 
