@@ -1,17 +1,21 @@
-[tool.poetry]
+[project]
 name = "ff6-save-editor"
 version = "0.1.0"
 description = "Project description"
-authors = ["Mathieu Lemay <acidrain1@gmail.com>"]
-license = "MIT"
+authors = [
+    {name = "Mathieu Lemay",email = "acidrain1@gmail.com"}
+]
+license = {text = "MIT"}
 readme = "README.md"
-include = ["ff6_save_editor/py.typed"]
+requires-python = "^3.11"
+dependencies = [
+    "cryptography (>=45.0.4,<46.0.0)",
+    "py3rijndael (>=0.3.3,<0.4.0)",
+    "pydantic (>=2.11.7,<3.0.0)",
+]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-cryptography = "^43.0.1"
-py3rijndael = "^0.3.3"
-pydantic = "^2.6.4"
+[tool.poetry]
+include = ["ff6_save_editor/py.typed"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.1"
@@ -42,18 +46,13 @@ ignore = [
     "D",  # pydocstyle
     "FIX",  # flake8-fixme
     "TD",  # flake8-todos
-
-    "ANN101",  # Missing type annotation for `self` in method
-    "ANN102",  # Missing type annotation for `cls` in method
 ]
 
 [tool.ruff.lint.pep8-naming]
 classmethod-decorators = [
     "classmethod",
-    "pydantic.validator",
     "pydantic.field_validator",
     "pydantic.model_validator",
-    "pydantic.root_validator"
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -64,5 +63,5 @@ classmethod-decorators = [
 ]
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
