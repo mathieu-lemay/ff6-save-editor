@@ -1,31 +1,39 @@
 [project]
 name = "ff6-save-editor"
 version = "0.1.0"
-description = "Project description"
+description = "Final Fantasy VI Pixel Remaster Save Editor for Nintendo Switch"
 authors = [
-    {name = "Mathieu Lemay",email = "acidrain1@gmail.com"}
+    { name = "Mathieu Lemay", email = "acidrain1@gmail.com" }
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = "^3.11"
+requires-python = ">=3.11,<4.0"
 dependencies = [
-    "cryptography (>=45.0.4,<46.0.0)",
-    "py3rijndael (>=0.3.3,<0.4.0)",
-    "pydantic (>=2.11.7,<3.0.0)",
+    "cryptography>=46.0.4,<47.0.0",
+    "py3rijndael>=0.3.3,<0.4.0",
+    "pydantic>=2.11.7,<3.0.0",
 ]
 
-[tool.poetry]
-include = ["ff6_save_editor/py.typed"]
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.0.1"
-mypy = "^1.8.0"
+[dependency-groups]
+dev = [
+    "mypy>=1.16.1",
+    "pytest>=8.4.1",
+]
 
 [tool.mypy]
 namespace_packages = true
 explicit_package_bases = true
 strict = true
 show_error_codes = true
+plugins = [
+    "pydantic.mypy"
+]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+warn_untyped_fields = true
 
 [tool.pytest.ini_options]
 minversion = "7.0"
@@ -63,5 +71,5 @@ classmethod-decorators = [
 ]
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"

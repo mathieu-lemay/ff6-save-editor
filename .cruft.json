@@ -1,17 +1,18 @@
 {
   "template": "git@github.com:mathieu-lemay/python-project-template.git",
-  "commit": "3ccefb14331d828204c398a3bddafd141826da71",
+  "commit": "9636ce84dd36c77d769f6c00de90210d4750d3b8",
   "checkout": null,
   "context": {
     "cookiecutter": {
       "project_slug": "ff6-save-editor",
-      "project_description": "Project description",
+      "project_description": "Final Fantasy VI Pixel Remaster Save Editor for Nintendo Switch",
       "module_name": "ff6_save_editor",
-      "python_version": "^3.11",
+      "python_version": ">=3.11,<4.0",
       "target_version": "py311",
       "license": "MIT",
+      "pydantic": true,
       "_template": "git@github.com:mathieu-lemay/python-project-template.git",
-      "_commit": "3ccefb14331d828204c398a3bddafd141826da71"
+      "_commit": "9636ce84dd36c77d769f6c00de90210d4750d3b8"
     }
   },
   "directory": null

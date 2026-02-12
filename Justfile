@@ -2,12 +2,12 @@ lint:
     pre-commit run --all-files
 
 test:
-    poetry run pytest --verbosity=1
+    uv run pytest --verbosity=1
 
 install:
-    poetry sync
+    uv sync
 
-update: _poetry_lock install
+update: _uv_lock install
 
-_poetry_lock:
-    poetry update --lock
+_uv_lock:
+    uv lock --upgrade
