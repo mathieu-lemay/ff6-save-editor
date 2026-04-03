@@ -32,7 +32,9 @@ def test_encryption_settings_should_load_values_from_env(
 
 
 def test_encryption_settings_default_values(faker: Faker) -> None:
-    settings = EncryptionSettings(password=faker.pystr(), salt=faker.pystr())
+    settings = EncryptionSettings(
+        password=faker.pystr().encode(), salt=faker.pystr().encode()
+    )
 
     assert settings.block_size == 32
 

@@ -23,7 +23,7 @@ def encryption_settings(faker: Faker) -> EncryptionSettings:
     password = faker.pystr(min_chars=32, max_chars=32)
     salt = faker.pystr(min_chars=32, max_chars=32)
 
-    return EncryptionSettings(password=password, salt=salt)
+    return EncryptionSettings(password=password.encode(), salt=salt.encode())
 
 
 @pytest.fixture
