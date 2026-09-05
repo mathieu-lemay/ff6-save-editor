@@ -9,24 +9,26 @@ license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.11,<4.0"
 dependencies = [
-    "cryptography>=46.0.4,<47.0.0",
+    "cryptography>=50.0.1,<51.0.0",
     "py3rijndael>=0.3.3,<0.4.0",
     "pydantic>=2.11.7,<3.0.0",
 ]
 
 [dependency-groups]
 dev = [
-    "mypy>=1.16.1",
-    "pytest>=8.4.1",
+    "mypy>=2.0.0,<3.0.0",
+    "pytest>=9.0.3,<10.0.0",
 ]
+
+[tool.uv]
+add-bounds = "major"
 
 [tool.mypy]
 namespace_packages = true
 explicit_package_bases = true
 strict = true
-show_error_codes = true
 plugins = [
-    "pydantic.mypy"
+    "pydantic.mypy",
 ]
 
 [tool.pydantic-mypy]
@@ -51,6 +53,7 @@ select = [
 ]
 ignore = [
     "COM",  # flake8-commas
+    "CPY",  # flake8-copyright
     "D",  # pydocstyle
     "FIX",  # flake8-fixme
     "TD",  # flake8-todos
