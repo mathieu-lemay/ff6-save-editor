@@ -3,9 +3,9 @@ name = "ff6-save-editor"
 version = "0.1.0"
 description = "Final Fantasy VI Pixel Remaster Save Editor for Nintendo Switch"
 authors = [
-    { name = "Mathieu Lemay", email = "acidrain1@gmail.com" }
+    { name = "Mathieu Lemay", email = "acidrain1@gmail.com" },
 ]
-license = {text = "MIT"}
+license = "MIT"
 readme = "README.md"
 requires-python = ">=3.11,<4.0"
 dependencies = [
@@ -16,8 +16,10 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    ## Automatically generated. DO NOT edit between these lines. ##
     "mypy>=2.0.0,<3.0.0",
     "pytest>=9.0.3,<10.0.0",
+    ## Automatically generated. DO NOT edit between these lines. ##
 ]
 
 [tool.uv]
@@ -42,15 +44,12 @@ minversion = "7.0"
 testpaths = ["tests"]
 
 [tool.ruff]
-target-version = "py311"
 exclude = [
     ".venv",
 ]
 
 [tool.ruff.lint]
-select = [
-    "ALL"
-]
+select = ["ALL"]
 ignore = [
     "COM",  # flake8-commas
     "CPY",  # flake8-copyright
